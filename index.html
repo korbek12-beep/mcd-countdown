@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
-  <title>Countdown 17.03 16:00</title>
+  <title>Odliczanie</title>
   <link rel="stylesheet" href="css/index.css" />
 </head>
 <body>
@@ -12,24 +12,25 @@
       <div class="title" id="title">Odliczanie do 17.03 16:00</div>
 
       <div class="countdown" id="countdown">
-        <div class="box">
-          <div class="num" id="dd">00</div>
-          <div class="lbl">dni</div>
+        <div class="group">
+          <div class="digits" id="dd">00</div>
+          <div class="label">dni</div>
         </div>
-        <div class="box">
-          <div class="num" id="hh">00</div>
-          <div class="lbl">godz</div>
+        <div class="group">
+          <div class="digits" id="hh">00</div>
+          <div class="label">godz</div>
         </div>
-        <div class="box">
-          <div class="num" id="mm">00</div>
-          <div class="lbl">min</div>
+        <div class="group">
+          <div class="digits" id="mm">00</div>
+          <div class="label">min</div>
         </div>
-        <div class="box">
-          <div class="num" id="ss">00</div>
-          <div class="lbl">sek</div>
+        <div class="group">
+          <div class="digits" id="ss">00</div>
+          <div class="label">sek</div>
         </div>
       </div>
 
+      <!-- To pomoże w diagnozie na ekranie -->
       <div class="status" id="status"></div>
     </div>
   </div>
@@ -37,3 +38,4 @@
   <script src="js/app.js"></script>
 </body>
 </html>
+``
