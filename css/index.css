@@ -38,30 +38,34 @@ body{
 .content{
   width: 100vw;
   height: 100vh;
-  background-color: #fff;
 
-  /* ✅ WYMUSZAMY portrait jako tło zawsze (tak jak chcesz) */
+  /* ✅ WAŻNE: 2 warstwy tła (fallback)
+     - najpierw próbujemy portrait
+     - jeśli portrait się nie wczyta, przeglądarka użyje kolejnego (landscape)
+     Ścieżki są zgodne z Twoim układem: css/ -> ../images/... [1](https://share.mcd.com/personal/sebastian_korbin_pl_mcd_com/Documents/Microsoft%20Teams%20Chat%20Files/Microsoft%20Copilot%20Chat%20Files/index.js) */
+  background-color: #fff;
   background-repeat: no-repeat;
   background-position: center center;
   background-size: cover;
-  background-image: url("../images/portrait.jpg");
+  background-image:
+    url("../images/portrait.jpg"),
+    url("../images/landscape.jpg");
 
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
 
-  padding: 4vh 5vw;
+  padding: 4vh 6vw;
 }
 
-/* Tekst – domyślnie wyśrodkowany */
 .title{
   font-family: system-ui, Arial, sans-serif;
   font-weight: 750;
-  font-size: 5.2vh;
+  font-size: 4.2vh;          /* mniejsze i czytelne w poziomie */
   color: #1f1f1f;
   text-align: center;
-  margin: 0 0 3.2vh 0;
+  margin: 0 0 2.6vh 0;
   letter-spacing: 0.02em;
 }
 
@@ -69,12 +73,13 @@ body{
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  gap: 6vw;
+  gap: 5vw;
 
-  padding: 2.2vh 3vw;
+  padding: 2.0vh 3vw;
   border-radius: 2vh;
+
+  /* podkładka pod cyfry dla czytelności na zdjęciu */
   background: rgba(255,255,255,0.55);
-  backdrop-filter: blur(2px);
 }
 
 .group{
@@ -87,10 +92,12 @@ body{
 .digits{
   font-family: speedeebig, Arial, sans-serif;
   font-weight: 900;
-  font-size: 22vh;
+
+  font-size: 20vh;
   line-height: 0.95;
   color: #1f1f1f;
 
+  /* odstępy między znakami */
   letter-spacing: 0.08em;
   padding-left: 0.08em;
 
@@ -107,51 +114,21 @@ body{
 }
 
 .status{
-  margin-top: 2.8vh;
+  margin-top: 2.2vh;
   font-family: system-ui, Arial, sans-serif;
-  font-size: 2.4vh;
+  font-size: 2.0vh;
   color: rgba(0,0,0,0.55);
   text-align: center;
 }
 
-/* =========================
-   ✅ LANDSCAPE: obsługa poziomu
-   - zmniejszamy title/status
-   - utrzymujemy wyśrodkowanie
-   - możesz też lekko zmniejszyć cyfry, żeby było “czyściej”
-   ========================= */
-@media (orientation: landscape) {
+/* Portrait – jeśli kiedyś obrócisz ekran */
+@media (orientation: portrait){
   .content{
-    padding: 4vh 6vw;
-    /* dalej portrait.jpg (wymuszone powyżej) */
+    padding: 5vh 6vw;
+    /* dalej portrait jako pierwsze + landscape jako fallback */
+    background-size: cover;
   }
 
-  .title{
-    font-size: 4.2vh;     /* mniejszy tytuł w poziomie */
-    margin-bottom: 2.6vh;
-  }
-
-  .status{
-    font-size: 2.0vh;     /* mniejszy status w poziomie */
-    margin-top: 2.2vh;
-  }
-
-  .countdown{
-    gap: 5vw;             /* minimalnie ciaśniej w poziomie */
-    padding: 2.0vh 3vw;
-  }
-
-  .digits{
-    font-size: 20vh;      /* minimalnie mniejsze cyfry w poziomie */
-    letter-spacing: 0.08em;
-    padding-left: 0.08em;
-  }
-}
-
-/* =========================
-   PORTRAIT fallback (jeśli kiedyś obrócisz ekran)
-   ========================= */
-@media (orientation: portrait) {
   .countdown{
     flex-wrap: wrap;
     gap: 6vw;
@@ -164,7 +141,5 @@ body{
 
   .digits{
     font-size: 16vh;
-    letter-spacing: 0.08em;
-    padding-left: 0.08em;
   }
 }
