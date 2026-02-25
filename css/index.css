@@ -5,6 +5,7 @@
 
 *{ box-sizing: border-box; }
 
+/* Font Speedee Big – ścieżki jak u Ciebie (css/ -> ../fonts/) */
 @font-face{
   font-family: speedeebig;
   src:
@@ -24,26 +25,25 @@ html, body{
 body{
   overflow: hidden;
   user-select: none;
-  pointer-events: none;
+  pointer-events: none; /* signage: brak interakcji */
 }
 
 #app{
   width: 100%;
-  height: 100vh;
+  height: 100vh;               /* zamiast dvh */
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
+/* ====== TŁO + LAYOUT ====== */
 .content{
   width: 100vw;
   height: 100vh;
 
-  /* ✅ WAŻNE: 2 warstwy tła (fallback)
-     - najpierw próbujemy portrait
-     - jeśli portrait się nie wczyta, przeglądarka użyje kolejnego (landscape)
-     Ścieżki są zgodne z Twoim układem: css/ -> ../images/... [1](https://share.mcd.com/personal/sebastian_korbin_pl_mcd_com/Documents/Microsoft%20Teams%20Chat%20Files/Microsoft%20Copilot%20Chat%20Files/index.js) */
   background-color: #fff;
+
+  /* ✅ fallback tła: portrait -> landscape (jeśli portrait nie wczyta się) */
   background-repeat: no-repeat;
   background-position: center center;
   background-size: cover;
@@ -56,29 +56,47 @@ body{
   align-items: center;
   justify-content: center;
 
+  /* bezpieczne marginesy */
   padding: 4vh 6vw;
 }
 
+/* ====== TYTUŁ: ZAWSZE 1 LINIA ====== */
 .title{
   font-family: system-ui, Arial, sans-serif;
   font-weight: 750;
-  font-size: 4.2vh;          /* mniejsze i czytelne w poziomie */
   color: #1f1f1f;
+
   text-align: center;
-  margin: 0 0 2.6vh 0;
   letter-spacing: 0.02em;
+
+  /* ✅ jedna linia */
+  white-space: nowrap;
+
+  /* ✅ jakby było bardzo ciasno: nie łam, tylko utnij */
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  /* szerokość, żeby nie wychodziło poza ekran */
+  max-width: 92vw;
+
+  /* domyślny rozmiar (i tak głównie działamy w poziomie) */
+  font-size: 5.0vh;
+
+  margin: 0 0 2.6vh 0;
 }
 
+/* ====== LICZNIK ====== */
 .countdown{
   display: flex;
   align-items: flex-end;
   justify-content: center;
+
+  /* odstępy między grupami (dni/godz/min/sek) */
   gap: 5vw;
 
+  /* podkładka dla czytelności na zdjęciu */
   padding: 2.0vh 3vw;
   border-radius: 2vh;
-
-  /* podkładka pod cyfry dla czytelności na zdjęciu */
   background: rgba(255,255,255,0.55);
 }
 
@@ -86,21 +104,29 @@ body{
   display: flex;
   flex-direction: column;
   align-items: center;
+
+  /* stabilna szerokość, żeby grupy się nie zlewały */
   min-width: 12vw;
 }
 
+/* Duże cyfry + odstępy między znakami */
 .digits{
   font-family: speedeebig, Arial, sans-serif;
   font-weight: 900;
 
+  /* 🔥 większe cyfry */
   font-size: 20vh;
+
   line-height: 0.95;
   color: #1f1f1f;
 
-  /* odstępy między znakami */
+  /* 🔥 “oddech” między cyframi, żeby nie było “20010501” */
   letter-spacing: 0.08em;
+
+  /* optyczne centrowanie przy letter-spacing */
   padding-left: 0.08em;
 
+  /* delikatny cień poprawia czytelność na tle zdjęcia */
   text-shadow: 0 0.08em 0.25em rgba(0,0,0,0.12);
 }
 
@@ -113,20 +139,57 @@ body{
   text-transform: lowercase;
 }
 
+/* Status / debug */
 .status{
   margin-top: 2.2vh;
   font-family: system-ui, Arial, sans-serif;
   font-size: 2.0vh;
   color: rgba(0,0,0,0.55);
   text-align: center;
+  max-width: 92vw;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-/* Portrait – jeśli kiedyś obrócisz ekran */
+/* ====== LANDSCAPE: dopracowanie poziomu ====== */
+@media (orientation: landscape){
+  .content{
+    padding: 4vh 6vw;
+  }
+
+  /* ✅ w poziomie zmniejszamy tytuł, żeby na pewno mieścił się w 1 linii */
+  .title{
+    font-size: 4.0vh;
+    max-width: 88vw;
+    margin-bottom: 2.2vh;
+  }
+
+  .status{
+    font-size: 1.9vh;
+    margin-top: 2.0vh;
+  }
+
+  .countdown{
+    gap: 5vw;
+    padding: 1.9vh 3vw;
+  }
+
+  .digits{
+    font-size: 20vh; /* możesz podbić do 21–22vh jeśli chcesz jeszcze większe */
+  }
+}
+
+/* ====== PORTRAIT (fallback, jeśli kiedyś obrócisz ekran) ====== */
 @media (orientation: portrait){
   .content{
     padding: 5vh 6vw;
-    /* dalej portrait jako pierwsze + landscape jako fallback */
-    background-size: cover;
+  }
+
+  /* tytuł nadal 1 linia, ale mniejszy w pionie */
+  .title{
+    font-size: 4.2vh;
+    max-width: 92vw;
   }
 
   .countdown{
@@ -143,3 +206,4 @@ body{
     font-size: 16vh;
   }
 }
+``
