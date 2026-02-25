@@ -5,7 +5,6 @@
 
 *{ box-sizing: border-box; }
 
-/* Zachowujemy Twój font i ścieżki (CSS jest w /css, fonty w /fonts) */
 @font-face{
   font-family: speedeebig;
   src:
@@ -25,12 +24,12 @@ html, body{
 body{
   overflow: hidden;
   user-select: none;
-  pointer-events: none; /* jak na signage, żeby nic nie “klikało” */
+  pointer-events: none;
 }
 
 #app{
   width: 100%;
-  height: 100vh;               /* kompatybilne zamiast dvh */
+  height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -41,21 +40,21 @@ body{
   height: 100vh;
   background-color: #fff;
 
-  /* Zachowujemy grafiki w tej samej lokalizacji */
+  /* ✅ WYMUSZAMY portrait jako tło zawsze (tak jak chcesz) */
   background-repeat: no-repeat;
   background-position: center center;
-  background-size: cover;       /* cover daje lepszy efekt “pełnego kadru” na 16:9 */
-  background-image: url("../images/landscape.jpg");
+  background-size: cover;
+  background-image: url("../images/portrait.jpg");
 
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
 
-  /* Bezpieczne marginesy od krawędzi */
   padding: 4vh 5vw;
 }
 
+/* Tekst – domyślnie wyśrodkowany */
 .title{
   font-family: system-ui, Arial, sans-serif;
   font-weight: 750;
@@ -66,54 +65,38 @@ body{
   letter-spacing: 0.02em;
 }
 
-/* Główne odliczanie */
 .countdown{
   display: flex;
   align-items: flex-end;
   justify-content: center;
-
-  /* większy odstęp między grupami: dni / godz / min / sek */
   gap: 6vw;
 
-  /* czytelność na tle: lekka “podkładka” dla całego bloku */
   padding: 2.2vh 3vw;
   border-radius: 2vh;
   background: rgba(255,255,255,0.55);
   backdrop-filter: blur(2px);
 }
 
-/* Każda grupa (dni, godz, min, sek) */
 .group{
   display: flex;
   flex-direction: column;
   align-items: center;
-
-  /* trzyma szerokość, żeby grupy nie zlewały się */
   min-width: 12vw;
 }
 
-/* Cyfry – większe + odstępy między znakami */
 .digits{
   font-family: speedeebig, Arial, sans-serif;
   font-weight: 900;
-
-  /* 🔥 większa czcionka */
   font-size: 22vh;
-
   line-height: 0.95;
   color: #1f1f1f;
 
-  /* 🔥 odstępy między znakami (żeby nie było “20010501”) */
   letter-spacing: 0.08em;
-
-  /* optycznie centrowanie przy letter-spacing */
   padding-left: 0.08em;
 
-  /* delikatne podbicie kontrastu */
   text-shadow: 0 0.08em 0.25em rgba(0,0,0,0.12);
 }
 
-/* Podpisy pod cyframi */
 .label{
   font-family: system-ui, Arial, sans-serif;
   font-size: 3.1vh;
@@ -123,32 +106,65 @@ body{
   text-transform: lowercase;
 }
 
-/* Status (na dole) */
 .status{
   margin-top: 2.8vh;
   font-family: system-ui, Arial, sans-serif;
   font-size: 2.4vh;
   color: rgba(0,0,0,0.55);
+  text-align: center;
 }
 
-/* Drobne dopasowanie na mniejszych szerokościach 16:9 */
-@media (max-width: 1280px){
-  .countdown{ gap: 5vw; }
-  .digits{ font-size: 20vh; letter-spacing: 0.075em; padding-left: 0.075em; }
-  .title{ font-size: 4.8vh; }
-}
-
-/* Portrait zostawiam jako fallback — grafika bez zmian */
-@media (max-aspect-ratio: 1/1){
+/* =========================
+   ✅ LANDSCAPE: obsługa poziomu
+   - zmniejszamy title/status
+   - utrzymujemy wyśrodkowanie
+   - możesz też lekko zmniejszyć cyfry, żeby było “czyściej”
+   ========================= */
+@media (orientation: landscape) {
   .content{
-    background-image: url("../images/portrait.jpg");
-    background-size: cover;
+    padding: 4vh 6vw;
+    /* dalej portrait.jpg (wymuszone powyżej) */
   }
+
+  .title{
+    font-size: 4.2vh;     /* mniejszy tytuł w poziomie */
+    margin-bottom: 2.6vh;
+  }
+
+  .status{
+    font-size: 2.0vh;     /* mniejszy status w poziomie */
+    margin-top: 2.2vh;
+  }
+
+  .countdown{
+    gap: 5vw;             /* minimalnie ciaśniej w poziomie */
+    padding: 2.0vh 3vw;
+  }
+
+  .digits{
+    font-size: 20vh;      /* minimalnie mniejsze cyfry w poziomie */
+    letter-spacing: 0.08em;
+    padding-left: 0.08em;
+  }
+}
+
+/* =========================
+   PORTRAIT fallback (jeśli kiedyś obrócisz ekran)
+   ========================= */
+@media (orientation: portrait) {
   .countdown{
     flex-wrap: wrap;
     gap: 6vw;
     padding: 2.2vh 4vw;
   }
-  .group{ min-width: 40vw; }
-  .digits{ font-size: 16vh; }
+
+  .group{
+    min-width: 40vw;
+  }
+
+  .digits{
+    font-size: 16vh;
+    letter-spacing: 0.08em;
+    padding-left: 0.08em;
+  }
 }
