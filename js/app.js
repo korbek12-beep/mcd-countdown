@@ -1,13 +1,14 @@
 (function () {
-  // Target: 17.03 16:00 (najbliższy termin; jeśli minął, to kolejny rok)
-  var TARGET_MONTH = 3;   // 1-12
-  var TARGET_DAY = 17;
-  var TARGET_HOUR = 16;
-  var TARGET_MINUTE = 0;
-  var TARGET_SECOND = 0;
+  // Stały target: 17.03.2026 16:00 czasu Polski (Warszawa).
+  // 17 marca 2026 to jeszcze CET (UTC+1), więc w UTC to 15:00.
+  var TARGET_UTC_MS = Date.UTC(2026, 2, 17, 15, 0, 0); // (miesiąc 0-11)
 
-  // Elementy
-  var elDD, elHH, elMM, elSS, elStatus, elTitle;
+  var elDD = document.getElementById("dd");
+  var elHH = document.getElementById("hh");
+  var elMM = document.getElementById("mm");
+  var elSS = document.getElementById("ss");
+  var elStatus = document.getElementById("status");
+  var elTitle = document.getElementById("title");
 
   function pad2(n) {
     n = n < 0 ? 0 : n;
@@ -18,31 +19,18 @@
     if (elStatus) elStatus.innerHTML = txt || "";
   }
 
-  function computeTargetMs() {
-    // liczymy w lokalnej strefie urządzenia
-    var now = new Date();
-    var year = now.getFullYear();
-
-    var target = new Date(year, TARGET_MONTH - 1, TARGET_DAY, TARGET_HOUR, TARGET_MINUTE, TARGET_SECOND, 0);
-    if (target.getTime() <= now.getTime()) {
-      target = new Date(year + 1, TARGET_MONTH - 1, TARGET_DAY, TARGET_HOUR, TARGET_MINUTE, TARGET_SECOND, 0);
-    }
-    return target.getTime();
-  }
-
-  var targetMs = 0;
-  var timerId = null;
-
   function tick() {
-    var nowMs = Date.now();
-    var left = targetMs - nowMs;
+    var now = Date.now();
+    var left = TARGET_UTC_MS - now;
     if (left < 0) left = 0;
 
     var totalSec = Math.floor(left / 1000);
     var days = Math.floor(totalSec / 86400);
     totalSec = totalSec % 86400;
+
     var hours = Math.floor(totalSec / 3600);
     totalSec = totalSec % 3600;
+
     var mins = Math.floor(totalSec / 60);
     var secs = totalSec % 60;
 
@@ -53,51 +41,27 @@
 
     if (left === 0) {
       setStatus("KONIEC");
-      if (timerId) {
-        clearInterval(timerId);
-        timerId = null;
-      }
+      clearInterval(timerId);
+      timerId = null;
     }
   }
 
-  function start() {
-    targetMs = computeTargetMs();
+  // Opcjonalnie: pokaż w tytule dokładną datę docelową (lokalnie)
+  (function setTitle() {
+    if (!elTitle) return;
+    var t = new Date(TARGET_UTC_MS);
+    // To pokaże czas w strefie urządzenia; tekst stały zostawiamy po polsku.
+    elTitle.innerHTML = "Odliczanie do 17.03.2026 16:00";
+  })();
 
-    // Ustaw tytuł z rokiem (żeby było jasne, do którego 17.03 liczy)
-    if (elTitle) {
-      var t = new Date(targetMs);
-      elTitle.innerHTML =
-        "Odliczanie do " + pad2(t.getDate()) + "." + pad2(t.getMonth() + 1) + "." + t.getFullYear() +
-        " " + pad2(t.getHours()) + ":" + pad2(t.getMinutes());
-    }
-
-    setStatus("JS działa. Start odliczania…");
-
-    tick();
-    timerId = setInterval(tick, 1000);
+  // Start
+  if (!elDD || !elHH || !elMM || !elSS) {
+    setStatus("BŁĄD: brakuje elementów dd/hh/mm/ss w HTML");
+    return;
   }
 
-  function init() {
-    elDD = document.getElementById("dd");
-    elHH = document.getElementById("hh");
-    elMM = document.getElementById("mm");
-    elSS = document.getElementById("ss");
-    elStatus = document.getElementById("status");
-    elTitle = document.getElementById("title");
-
-    if (!elDD || !elHH || !elMM || !elSS) {
-      // jeśli tu trafisz, to znaczy że HTML nie ma tych ID
-      setStatus("BŁĄD: Brakuje elementów dd/hh/mm/ss w HTML");
-      return;
-    }
-
-    start();
-  }
-
-  // Start po załadowaniu DOM
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", init);
-  } else {
-    init();
-  }
+  setStatus("JS działa. Odliczanie uruchomione.");
+  tick();
+  var timerId = setInterval(tick, 1000);
 })();
+``
