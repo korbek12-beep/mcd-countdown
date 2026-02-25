@@ -1,42 +1,154 @@
+:root{
+  font-family: system-ui, Arial, sans-serif;
+  line-height: 1.2;
+}
+
+*{ box-sizing: border-box; }
+
+/* Zachowujemy Twój font i ścieżki (CSS jest w /css, fonty w /fonts) */
+@font-face{
+  font-family: speedeebig;
+  src:
+    url("../fonts/speedee_big.woff2") format("woff2"),
+    url("../fonts/speedee_big.woff") format("woff");
+  font-weight: 400;
+  font-style: normal;
+}
+
+html, body{
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background: #000;
+}
+
+body{
+  overflow: hidden;
+  user-select: none;
+  pointer-events: none; /* jak na signage, żeby nic nie “klikało” */
+}
+
+#app{
+  width: 100%;
+  height: 100vh;               /* kompatybilne zamiast dvh */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.content{
+  width: 100vw;
+  height: 100vh;
+  background-color: #fff;
+
+  /* Zachowujemy grafiki w tej samej lokalizacji */
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;       /* cover daje lepszy efekt “pełnego kadru” na 16:9 */
+  background-image: url("../images/landscape.jpg");
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  /* Bezpieczne marginesy od krawędzi */
+  padding: 4vh 5vw;
+}
+
+.title{
+  font-family: system-ui, Arial, sans-serif;
+  font-weight: 750;
+  font-size: 5.2vh;
+  color: #1f1f1f;
+  text-align: center;
+  margin: 0 0 3.2vh 0;
+  letter-spacing: 0.02em;
+}
+
+/* Główne odliczanie */
 .countdown{
-  display:flex;
-  align-items:center;
-  justify-content:center;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
 
-  /* większe odstępy między grupami (dni/godz/min/sek) */
-  gap: 5vw;                 /* było np. 3vw */
+  /* większy odstęp między grupami: dni / godz / min / sek */
+  gap: 6vw;
+
+  /* czytelność na tle: lekka “podkładka” dla całego bloku */
+  padding: 2.2vh 3vw;
+  border-radius: 2vh;
+  background: rgba(255,255,255,0.55);
+  backdrop-filter: blur(2px);
 }
 
+/* Każda grupa (dni, godz, min, sek) */
 .group{
-  display:flex;
-  flex-direction:column;
-  align-items:center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 
-  /* opcjonalnie: minimalna szerokość, żeby grupy nie zjeżdżały */
-  min-width: 14vw;
+  /* trzyma szerokość, żeby grupy nie zlewały się */
+  min-width: 12vw;
 }
 
+/* Cyfry – większe + odstępy między znakami */
 .digits{
   font-family: speedeebig, Arial, sans-serif;
   font-weight: 900;
 
-  /* 🔥 większe cyfry */
-  font-size: 20vh;          /* było np. 16vh */
+  /* 🔥 większa czcionka */
+  font-size: 22vh;
 
-  line-height: 1;
-  color: #2a2a2a;
+  line-height: 0.95;
+  color: #1f1f1f;
 
-  /* 🔥 odstępy między znakami */
-  letter-spacing: 0.06em;   /* spróbuj 0.04–0.08em */
+  /* 🔥 odstępy między znakami (żeby nie było “20010501”) */
+  letter-spacing: 0.08em;
 
-  /* opcjonalnie: lekkie podbicie czytelności na tle zdjęcia */
-  /* text-shadow: 0 0.08em 0.25em rgba(0,0,0,0.15); */
+  /* optycznie centrowanie przy letter-spacing */
+  padding-left: 0.08em;
+
+  /* delikatne podbicie kontrastu */
+  text-shadow: 0 0.08em 0.25em rgba(0,0,0,0.12);
 }
 
+/* Podpisy pod cyframi */
 .label{
   font-family: system-ui, Arial, sans-serif;
-  font-size: 3.2vh;         /* lekko większe podpisy */
-  color: #555;
+  font-size: 3.1vh;
+  color: #3f3f3f;
   margin-top: 1.2vh;
-  letter-spacing: 0.05em;   /* delikatny „oddech” w podpisach */
+  letter-spacing: 0.06em;
+  text-transform: lowercase;
+}
+
+/* Status (na dole) */
+.status{
+  margin-top: 2.8vh;
+  font-family: system-ui, Arial, sans-serif;
+  font-size: 2.4vh;
+  color: rgba(0,0,0,0.55);
+}
+
+/* Drobne dopasowanie na mniejszych szerokościach 16:9 */
+@media (max-width: 1280px){
+  .countdown{ gap: 5vw; }
+  .digits{ font-size: 20vh; letter-spacing: 0.075em; padding-left: 0.075em; }
+  .title{ font-size: 4.8vh; }
+}
+
+/* Portrait zostawiam jako fallback — grafika bez zmian */
+@media (max-aspect-ratio: 1/1){
+  .content{
+    background-image: url("../images/portrait.jpg");
+    background-size: cover;
+  }
+  .countdown{
+    flex-wrap: wrap;
+    gap: 6vw;
+    padding: 2.2vh 4vw;
+  }
+  .group{ min-width: 40vw; }
+  .digits{ font-size: 16vh; }
 }
